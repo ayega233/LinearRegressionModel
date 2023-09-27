@@ -2,10 +2,37 @@ Package: LinearRegressionModel
 Type: Package
 Title: Package is handle the linear regression models.
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: person1("Ayesha", "Gamage", email = "ayega981@student.liu.se",role = c(student))
+        person2("Chandika","Nishshanka,"email=chahe114@student.liu.se","role=student" )
+Maintainer: The package maintainer <ayega981@student.liu.se>
+Description: The "LinearRegHandler" package is a powerful and user-friendly tool designed 
+             to simplify the management and analysis of linear regression models in the 
+             R programming environment. This package provides essential functionalities for
+             performing linear regression analysis easily and flexibly.
+             
+             Basic features
+             
+             * Linear Algebra Foundation
+                   LinearRegHandler uses the principles of linear algebra to create a solid
+                   foundation for handling linear regression models. This ensures accurate 
+                   and efficient calculations.
+             * Object-oriented system
+                   The package implements an intuitive object-oriented system, allowing users
+                   to seamlessly interact with regression models. It includes specialized functions
+                   such as print(), plot(), resid(), pred(), coef(), and summary(), enabling users 
+                   to explore and visualize results effortlessly.
+             * Vignettes for guidance
+                   LinearRegHandler comes complete with a comprehensive vignette that serves as a 
+                   step-by-step guide. It demonstrates how to effectively use the package to perform
+                   simple regression analyses. Additionally, vignettes demonstrate the package's 
+                   capabilities using a sample data set.
+
+            This package streamlines the process of working with linear regression models, making it
+            accessible to both beginners and experienced data analysts. Whether you need to fit a model,
+            extract coefficients, generate predictions, or visualize results, LinearRegHandler simplifies
+            the workflow, saving you time and effort.
+
+
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
