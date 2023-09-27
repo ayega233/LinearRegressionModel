@@ -28,8 +28,6 @@ Description: The "LinearRegHandler" package is a powerful and user-friendly tool
             accessible to both beginners and experienced data analysts. Whether you need to fit a model,
             extract coefficients, generate predictions, or visualize results, LinearRegHandler simplifies
             the workflow, saving you time and effort.
-
-
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
