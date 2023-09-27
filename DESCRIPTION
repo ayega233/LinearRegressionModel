@@ -9,9 +9,7 @@ Description: The "LinearRegHandler" package is a powerful and user-friendly tool
              to simplify the management and analysis of linear regression models in the 
              R programming environment. This package provides essential functionalities for
              performing linear regression analysis easily and flexibly.
-             
              Basic features
-             
              * Linear Algebra Foundation
                    LinearRegHandler uses the principles of linear algebra to create a solid
                    foundation for handling linear regression models. This ensures accurate 
@@ -26,7 +24,6 @@ Description: The "LinearRegHandler" package is a powerful and user-friendly tool
                    step-by-step guide. It demonstrates how to effectively use the package to perform
                    simple regression analyses. Additionally, vignettes demonstrate the package's 
                    capabilities using a sample data set.
-
             This package streamlines the process of working with linear regression models, making it
             accessible to both beginners and experienced data analysts. Whether you need to fit a model,
             extract coefficients, generate predictions, or visualize results, LinearRegHandler simplifies
