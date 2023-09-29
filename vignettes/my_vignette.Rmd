@@ -1,0 +1,21 @@
+---
+title: "Multiple Linear Regression Module"
+author: "Chandika Nishshanka & Ayesha Gamage"
+data: "'r.sys.date()'"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multiple Linear Regression Module}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(LinearRegressionModel)
+```
