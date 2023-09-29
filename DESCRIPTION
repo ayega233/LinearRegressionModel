@@ -28,7 +28,12 @@ Description: The "LinearRegHandler" package is a powerful and user-friendly tool
             accessible to both beginners and experienced data analysts. Whether you need to fit a model,
             extract coefficients, generate predictions, or visualize results, LinearRegHandler simplifies
             the workflow, saving you time and effort.
-License: What license is it under?
+License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    ggplot2
