@@ -1,5 +1,18 @@
+#'Perform Multiple Linear Regression
+#'
+#'This function performs multiple linear regression and calculates various statistics.
+#'
+#' @param formula A formula specifying the regression model.
+#' @param data A data frame containing the variables in the formula.
+#'
+#' @return An object of class 'linreg' containing regression results and statistics.
+#' @export
+#'
+#' @examples
+#' data(mtcars)
+#' model <- linreg(mpg ~ wt + hp, data = mtcars)
+#' 
 library(ggplot2)
-
 linreg <- function(formula,data){
   reg <- structure(list(coefficient=list()),class="linreg")
 
@@ -77,3 +90,4 @@ lm(Petal.Length~Species, data = iris)
 
 #data(iris)mod_object <- lm(Petal.Length~Species, data = iris)
 #print(mod_object)
+
