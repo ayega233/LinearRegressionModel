@@ -11,7 +11,6 @@
 #' @examples
 #' data(mtcars)
 #' model <- linreg(mpg ~ wt + hp, data = mtcars)
-#' 
 library(ggplot2)
 linreg <- function(formula,data){
   reg <- structure(list(coefficient=list()),class="linreg")
