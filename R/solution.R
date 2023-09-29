@@ -1,3 +1,5 @@
+#' @import ggplot2
+
 library(ggplot2)
 
 linreg <- function(formula,data){
