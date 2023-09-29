@@ -19,16 +19,9 @@ linreg <- function(formula,data){
   
   reg$filted_v <- x%*%reg$beta
   reg$resi_v <- y - reg$filted_v
-  
- # regcoef_v<-
-  
 
   return(reg)
 }
-
-data(iris)
-mod_object <-linreg(Petal.Length~Species, data = iris)
-
 
 
 print.linreg <-function(reg){
@@ -38,7 +31,7 @@ print.linreg <-function(reg){
   cat("Coefficients:\n")
   print(coefficient,row.names = FALSE)
 }
-print(mod_object)
+
 #options(repr.plot.width = 2, repr.plot.height =3)
 
 plot.linreg <-function(reg){
@@ -66,7 +59,7 @@ plot.linreg <-function(reg){
   #+theme(plot.margin = unit(c(3,10,1,1),"cm"))
   p+geom_point(shape=1, size=3)+geom_smooth(method = "lm")
 }
-plot(mod_object)
+
 
 
 
@@ -76,7 +69,7 @@ resid <- function(reg){
   cat("Residuals: \n")
   print(unlist(reg$resi_v[,1]))
 }
-resid(mod_object)
+
 
 pred<-function(reg){
   cat("Call:\n")
@@ -85,16 +78,16 @@ pred<-function(reg){
   print(unlist(reg$filted_v[,1]))
 }
 
-pred(mod_object)
 
 coef.linreg<-function(reg){
   print("coef")
   #cat("coefficient:",reg$call)
 }
-coef(mod_object)
 
 summary.linreg <- function(reg){
   print("summery")
   }
-summary(mod_object)
+
+#data(iris)
+#mod_object <-linreg(Petal.Length~Species, data = iris)
 
