@@ -19,3 +19,68 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(LinearRegressionModel)
 ```
+
+# Introduction
+
+This R package will creating for handling linear regression models. The package will draw upon the principles of linear algebra to establish the foundational functionality. Also implement an object oriented system to handle special functions such as print(), plot(), resid(), pred(), coef() and summary().The package can be used to conduct a simple regression analysis using a dateset included in the package.
+
+As we explore the package's design and development, we'll come across different design options, each with varying levels of complexity. These options encompass:
+
+Implementing Calculations Using Ordinary Linear Algebra: This approach forms the core of our package, allowing us to perform regression calculations efficiently.
+
+
+Implementing the Results as an S3 Class: We'll explore the advantages of creating an S3 class for managing regression results, enhancing the package's structure and usability.
+
+
+(*) Implementing a 'theme()' for the Graphical Profile: For those who wish to tailor the package's graphical appearance to their preferences, we'll discuss the implementation of a 'theme()' function, adding a layer of customization.
+
+# Background Information:
+
+Write the R Code: In this R package, our primary task is to create a function called linreg() for multiple regression models. This function will accept two arguments: formula and data. The function will return an object of class linreg, either as an S3 class or an RC class. The formula argument will accept a formula object. Within the function, we will begin by using the model.matrix() function to construct the matrix X (representing independent variables) and extract the dependent variable y using all.vars().
+
+Calculate the Following Parameters: Our next step involves calculating essential parameters for the regression model
+
+Regression Coefficients:$$β ̂=(X^T X)^-1 X^T y \tag{1}$$  
+
+Fitted Values: $$y ̂=Xβ ̂ \tag{2}$$                     
+
+Residuals:  $$e ̂=y-y ̂=y-Xβ \tag{3}$$                       
+
+Degrees of Freedom:   $$df=n-p \tag{4}$$                    
+
+Residual Variance:  $$σ ̂^2=(e^T e)/df \tag{5}$$                   
+
+Variance of the Regression Coefficients:  $$Var(β ̂ )=σ ̂^2 (X^T X)^(-1) \tag{6}$$    
+
+t-values for Each Coefficient:		$$t_β=β ̂/√(Var(β ̂ ) ) \tag{7}$$		 
+
+We will utilize the pt() function to calculate the p-values for each regression coefficient. All these statistics will be stored in an object of class linreg. We will also document the linreg() function using roxygen2.
+
+(*) Using the QR Decomposition: In the realm of statistical software, the QR decomposition offers a faster and more robust approach to estimation. We'll explore the computation of `^β` and `Var(^β)`   using a QR decomposition of X.
+
+Implementing Methods for Your Class: Having performed the necessary calculations and stored them in an object with the class linreg, we proceed to implement various "methods" for our object. These implementations can be done using either the S3 or (*) the RC object-oriented system. The following methods will be developed and documented using roxygen2:
+
+This method will print out the coefficients and coefficient names, mirroring the output produced by the lm class.
+
+
+plot(): Utilizing ggplot2, this method will generate two plots. It's important to ensure that ggplot2 is included in your package. Consider incorporating the median value for added context.
+
+resid(): This method will return the vector of residuals, denoted as `^e`
+
+pred(): This method will provide the predicted values, represented as `^y`.
+
+coef(): This method will return the coefficients as a named vector.`^β`
+
+summary(): This method will furnish a printout similar to that of lm objects, presenting coefficients with their standard error, t-value, p-value, as well as the estimate of  and the degrees of freedom in the model.
+
+Stay tuned as we embark on this journey to create an efficient and user-friendly R package for handling linear regression models.
+
+#```{r setup}
+
+
+# Import Sample Dataset iris
+```{r}
+data(iris)
+```
+
+
