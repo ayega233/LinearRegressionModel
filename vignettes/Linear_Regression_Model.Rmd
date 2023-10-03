@@ -75,12 +75,48 @@ summary(): This method will furnish a printout similar to that of lm objects, pr
 
 Stay tuned as we embark on this journey to create an efficient and user-friendly R package for handling linear regression models.
 
+<<<<<<< HEAD:vignettes/my_vignette.Rmd
+=======
 
+>>>>>>> 71eae200345ca4110477e814231b640c1cea2c53:vignettes/Linear_Regression_Model.Rmd
 
-
-# Import Sample Dataset iris
+### Import Sample Dataset iris
 ```{r}
 data(iris)
 ```
 
+### create a linreg mode object using linreg@new function
+```{r}
+linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
+```
+
+### print the coefficients and coefficient names according to multiple regression model
+```{r}
+linreg_mod_object$print()
+```
+
+### print two plots: Residuals vs Fitted and Scale−Location 
+```{r}
+linreg_mod_object$plot()
+```
+
+### print residuals e^ 
+```{r}
+linreg_mod_object$resid()
+```
+
+### print predicted values y^
+```{r}
+linreg_mod_object$pred()
+```
+
+### print the coefficients
+```{r}
+linreg_mod_object$coef()
+```
+
+### print summary statistics
+```{r}
+linreg_mod_object$summary()
+```
 
