@@ -116,7 +116,7 @@ linreg_mod_object$coef()
 ```
 
 ### print summary statistics
-including the coefficients with their standard error, t-value and p-value as well as the estimate of ^ σ and the degrees of freedom in the model
 ```{r}
 linreg_mod_object$summary()
 ```
+
