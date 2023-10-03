@@ -75,12 +75,15 @@ summary(): This method will furnish a printout similar to that of lm objects, pr
 
 Stay tuned as we embark on this journey to create an efficient and user-friendly R package for handling linear regression models.
 
-#```{r setup}
 
-
-# Import Sample Dataset iris
+### Import Sample Dataset iris
 ```{r}
 data(iris)
+```
+
+### Create linreg mode object using linreg@new function
+```{r}
+linreg <- structure(list(coefficient=list()),class="linreg")
 ```
 
 
