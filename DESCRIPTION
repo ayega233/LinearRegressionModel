@@ -1,6 +1,6 @@
 Package: LinearRegressionModel
 Type: Package
-Title: Package is handle the linear regression models.
+Title: Package is handle the linear regression models
 Version: 0.1.0
 Author: person1("Ayesha", "Gamage", email = "ayega981@student.liu.se",role = c(student))
         person2("Chandika","Nishshanka,"email=chahe114@student.liu.se","role=student" )
@@ -32,8 +32,13 @@ License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr 
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    ggplot2
+    ggplot2,
+    stats,
+    methods

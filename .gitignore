@@ -4,3 +4,4 @@
 .Ruserdata
 *.Rproj
 LinearRegressionModel.Rproj
+inst/doc

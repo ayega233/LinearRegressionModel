@@ -3,17 +3,6 @@
 \name{linreg}
 \alias{linreg}
 \title{Linear regrestion model}
-\usage{
-linreg(formula, data)
-}
-\arguments{
-\item{formula}{linear formula as symbolic model to filter data.}
-
-\item{data}{should be data frame}
-}
-\value{
-return the linreg class object
-}
 \description{
-The class used RC method and return class object with data.
+Linear regrestion model
 }
