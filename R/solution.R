@@ -1,3 +1,22 @@
+#'Perform Multiple Linear Regression
+#'
+#'This function performs multiple linear regression and calculates various statistics.
+#'
+#' @param formula A formula specifying the regression model.
+#' @param data A data frame containing the variables in the formula.
+#'
+#' @return An object of class 'linreg' containing regression results and statistics.
+#' @export
+#'
+#' @examples
+#' data(iris)
+#' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
+#' linreg_mod_object$print()
+#' linreg_mod_object$plot()
+#' linreg_mod_object$resid()
+#' linreg_mod_object$pred()
+#' linreg_mod_object$coef()
+#' linreg_mod_object$summary()
 #' @import ggplot2
 #' @export linreg
 
