@@ -1,32 +1,34 @@
 #'Linear regrestion model
-#' @name linreg-class
+#' @name linregmodel
 #' @import ggplot2
 #' @import stats
 #' @import methods
 #' @import gridExtra
+
 
 library(ggplot2)
 library(stats)
 library(gridExtra)
 
 #' Reference class for Liner Regression.
-#' @export linreg
 #' @field formula linear formula as symbolic model to filter data.
 #' @field data should be data frame
+#' @export linreg
+#' @name linreg
+#' @docType methods
 #' @examples
-#'  data("iris")
-#'
-#'  linreg_mod_object <- linreg$new(formula = Petal.Length~Species, data=iris)
-#'  linreg_mod_object$print()
-#'  linreg_mod_object$plot()
-#'  linreg_mod_object$resid()
-#'  linreg_mod_object$pred()
-#'  linreg_mod_object$coef()
-#'  linreg_mod_object$summary()
+#' data(iris)
+#' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
+#' linreg_mod_object$print()
+#' linreg_mod_object$plot()
+#' linreg_mod_object$resid()
+#' linreg_mod_object$pred()
+#' linreg_mod_object$coef()
+#' linreg_mod_object$summary()
 
 
 linreg <- setRefClass("linreg",
-        fields = list(formula = "formula",data = "data.frame",coefficients="list"),
+        fields = list(formula = "formula",data = "data.frame",params="list"),
         methods = list(
           initialize = function(formula, data) {
             .self$formula<-formula
@@ -36,35 +38,35 @@ linreg <- setRefClass("linreg",
 
             .self$formula <- formula
             .self$data <-data
-            .self$coefficients$x <-x
-            .self$coefficients$y <-y
+            .self$params$x <-x
+            .self$params$y <-y
 
-            .self$coefficients$param <-deparse(substitute(data))
+            .self$params$param <-deparse(substitute(data))
 
             beta<- (solve(t(x)%*%x)%*%t(x))%*%y
-            .self$coefficients$beta <-beta
+            .self$params$beta <-beta
 
-            .self$coefficients$filted_v <- x%*%.self$coefficients$beta
-            .self$coefficients$resi_v <- y - .self$coefficients$filted_v
+            .self$params$filted_v <- x%*%.self$params$beta
+            .self$params$resi_v <- y - .self$params$filted_v
 
-            .self$coefficients$std_reduals <-sqrt(abs(.self$coefficients$resi_v))
+            .self$params$std_reduals <-sqrt(abs(.self$params$resi_v))
 
-            n <-length(.self$coefficients$y)
-            .self$coefficients$digree_of_free <- n - length(.self$coefficients$beta)
+            n <-length(.self$params$y)
+            .self$params$digree_of_free <- n - length(.self$params$beta)
 
-            .self$coefficients$resi_var <- (t(.self$coefficients$resi_v)%*%.self$coefficients$resi_v)/.self$coefficients$digree_of_free
+            .self$params$resi_var <- (t(.self$params$resi_v)%*%.self$params$resi_v)/.self$params$digree_of_free
 
             var_of_reg_coef <- (solve(t(x)%*%x))
 
-            standard_error<-sqrt(diag(var_of_reg_coef)%*%.self$coefficients$resi_var)
+            standard_error<-sqrt(diag(var_of_reg_coef)%*%.self$params$resi_var)
 
             t_values <- beta/standard_error
 
 
-            pt_values<-2*pt(abs(t_values), .self$coefficients$digree_of_free, lower.tail = FALSE)
+            pt_values<-2*pt(abs(t_values), .self$params$digree_of_free, lower.tail = FALSE)
 
-            .self$coefficients$coefficients <- cbind(beta, standard_error, t_values, pt_values)
-            dimnames(.self$coefficients$coefficients) <- list(row.names(beta), c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
+            .self$params$coefficients <- cbind(beta, standard_error, t_values, pt_values)
+            dimnames(.self$params$coefficients) <- list(row.names(beta), c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
           },
 
 
@@ -75,9 +77,9 @@ linreg <- setRefClass("linreg",
           #' @return print the coefficient as lm function.
 
           print = function(){
-            coefficient <-t(.self$coefficients$beta)
+            coefficient <-t(.self$params$beta)
             cat("Call:\n")
-            cat(paste0("linreg(formula = ",deparse(.self$formula),", data = ",.self$coefficients$param,")"))
+            cat(paste0("linreg(formula = ",deparse(.self$formula),", data = ",.self$params$param,")"))
             cat("\nCoefficients:\n")
             prmatrix(coefficient,rowlab=rep("",3))
           },
@@ -89,15 +91,15 @@ linreg <- setRefClass("linreg",
           plot = function(){
 
             plot_data <- data.frame(list(
-              Residuals=.self$coefficients$resi_v,
-              Fitted=.self$coefficients$filted_v
+              Residuals=.self$params$resi_v,
+              Fitted=.self$params$filted_v
             ))
             plot_data1 <- data.frame(list(
-              Fitted=.self$coefficients$filted_v,
-              Standardizedresiduals=.self$coefficients$std_reduals
+              Fitted=.self$params$filted_v,
+              Standardizedresiduals=sqrt(abs(.self$params$resi_v/as.numeric(.self$params$resi_var)))
             ))
             liu_theme <- theme(
-              plot.title =element_text(colour = "#6a7e91",size = 15),
+              plot.title =element_text(colour = "#6a7e91",size = 12),
               plot.margin = margin(1, 1, 1, 1, "cm"),
               panel.grid.major = element_line(colour = "grey80"),
               panel.background = element_rect(
@@ -109,12 +111,12 @@ linreg <- setRefClass("linreg",
             #logo <- readPNG("liu_logo.png")
             p <- ggplot2::ggplot(data=plot_data)+ (mapping = aes(x = Fitted,y = Residuals ))
             p <- p+ggplot2::labs(title = "Residuals vs Fitted" ,y="Residuals",x =paste0("Fitted \n lm(Petal.Length ~ Species)"))
-            p <-p+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
+            p <-p+geom_point(shape=1, size=2)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
 
 
-            p1 <- ggplot2::ggplot(data=plot_data1)+ (mapping = aes(x = Fitted,y = Standardizedresiduals ))+ggtitle("Scale-Location")
-            p1 <- p1+labs(y=expression(sqrt("Standardized residuals")),title ="Fitted \n lm(Petal.Length ~ Species)")
-            p1 <-p1+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
+            p1 <- ggplot2::ggplot(data=plot_data1)+ (mapping = aes(x = Fitted,y = Standardizedresiduals ))
+            p1 <- p1+labs(y=expression(sqrt(abs("Standardized residuals"))),title ="Scale-Location")
+            p1 <-p1+geom_point(shape=1, size=2)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme+scale_y_continuous(breaks = c(0.5,1,1.5,2,2.5), limits = c(0.1,3))
             gridExtra::grid.arrange(p,p1,ncol=2)
 
           },
@@ -124,7 +126,7 @@ linreg <- setRefClass("linreg",
           #' Print the residuals values.
           #'
           resid = function(){
-            return(unlist(.self$coefficients$resi_v[,1]))
+            return(unlist(.self$params$resi_v[,1]))
           },
 
           #' @details Print the  predicted values
@@ -133,7 +135,7 @@ linreg <- setRefClass("linreg",
           #'
           #'
           pred = function(){
-            return(unlist(.self$coefficients$filted_v[,1]))
+            return(unlist(.self$params$filted_v[,1]))
           },
           #' @details Coefficients
           #' @description
@@ -141,8 +143,7 @@ linreg <- setRefClass("linreg",
           #'
           #'
           coef = function(){
-            coefficient <-t(.self$coefficients$beta)
-            return(unname(t(.self$coefficients$beta)))
+            return(unname(t(.self$params$beta)))
           },
           #' @details Summery
           #' @description
@@ -151,11 +152,11 @@ linreg <- setRefClass("linreg",
           #'
           #'
           summary  = function(){
-            coefficient <-t(.self$coefficients$beta)
-            cat(paste0("linreg(formula = ",deparse(.self$coefficients$formula),", data = ",.self$coefficients$param,")"))
+            coefficient <-t(.self$params$beta)
+            cat(paste0("linreg(formula = ",deparse(.self$params$formula),", data = ",.self$params$param,")"))
             cat("\nCoefficients:\n")
-            printCoefmat(.self$coefficients$coefficients, na.print = "NA")
-            cat("Residual standard error:",sqrt(.self$coefficients$resi_var), "on",.self$coefficients$digree_of_free,"degrees of freedom")
+            printCoefmat(.self$params$coefficients, na.print = "NA")
+            cat("Residual standard error:",sqrt(.self$params$resi_var), "on",.self$params$digree_of_free,"degrees of freedom")
 
           }
         )
