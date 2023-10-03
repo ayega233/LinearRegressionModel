@@ -1,3 +1,5 @@
+#'Linear regrestion model
+#' @name linreg
 #' @import ggplot2
 
 
@@ -51,6 +53,8 @@ linreg <- function(formula,data){
 }
 #mod_object <-linreg(Petal.Length~Species, data = iris)
 
+#' Print function
+#' @name print
 #' @description
 #'This function print the coefficient of regretion.
 #' @param reg object which return from linreg class
@@ -65,6 +69,8 @@ print.linreg <-function(reg){
   prmatrix(coefficient,rowlab=rep("",3))
 }
 
+#' Plot data
+#' @name plot
 #' @description
 #' This function plot two graph using ggplot2
 #' @param reg object which return from linreg class
@@ -99,18 +105,23 @@ plot.linreg <-function(reg){
 
 #plot(mod_object)
 
+#' Print residuals values.
+#' @name resid
 #' @description
 #' Print the residuals values.
-#' @param reg object which return from linreg class
 #' 
+#' @param reg object which return from linreg class
 #' @export resid
 #' @export
 resid <- function(reg){
   return(unlist(reg$resi_v[,1]))
 }
 
+#' Print the  predicted values
+#' @name pred
 #' @description
 #' Print the  predicted values
+#' 
 #' @param reg object which return from linreg class
 #' @export pred
 #' @export
@@ -118,8 +129,11 @@ pred<-function(reg){
   return(unlist(reg$filted_v[,1]))
 }
 
+#' Coefficients
+#' @name coef 
 #' @description
 #' Print the coefficients as a named vector.
+#'
 #' @param reg object which return from linreg class 
 #' @export coef.linreg
 #' @export
@@ -128,9 +142,12 @@ coef.linreg<-function(reg){
   return(unname(t(reg$beta)))
 }
 
+#' Summery
+#' @name summery
 #' @description
 #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ˆσ and the degrees
 #'  of freedom in the model, same as printed of lm function.
+#'  
 #' @param reg object which return from linreg class 
 #' @export summary.linreg
 #' @export
