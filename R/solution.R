@@ -1,5 +1,5 @@
 #'Linear regrestion model
-#' @name linreg
+#' @name linreg-class
 #' @import ggplot2
 #' @import stats
 #' @import methods
@@ -8,181 +8,156 @@
 library(ggplot2)
 library(stats)
 library(gridExtra)
-library(png)
 
-#'Perform Multiple Linear Regression
-#'
-#'This function performs multiple linear regression and calculates various statistics.
-#'
-#' @param formula A formula specifying the regression model.
-#' @param data A data frame containing the variables in the formula.
-#'
-#' @return An object of class 'linreg' containing regression results and statistics.
-#' @export
-#'
+#' Reference class for Liner Regression.
+#' @export linreg
+#' @field formula linear formula as symbolic model to filter data.
+#' @field data should be data frame
 #' @examples
-#' data(iris)
-#' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
-#' linreg_mod_object$print()
-#' linreg_mod_object$plot()
-#' linreg_mod_object$resid()
-#' linreg_mod_object$pred()
-#' linreg_mod_object$coef()
-#' linreg_mod_object$summary()
+#'  data("iris")
 #'
+#'  linreg_mod_object <- linreg$new(formula = Petal.Length~Species, data=iris)
+#'  linreg_mod_object$print()
+#'  linreg_mod_object$plot()
+#'  linreg_mod_object$resid()
+#'  linreg_mod_object$pred()
+#'  linreg_mod_object$coef()
+#'  linreg_mod_object$summary()
+
+
 linreg <- setRefClass("linreg",
-            fields = list(formula = "formula",data = "data.frame",coefficients="list"),
-            methods = list(
-              initialize = function(formula, data) {
-                .self$formula<-formula
-                .self$data<-data
-                x<-model.matrix(formula,data)
-                y<-data[,all.vars(formula)[1]]
+        fields = list(formula = "formula",data = "data.frame",coefficients="list"),
+        methods = list(
+          initialize = function(formula, data) {
+            .self$formula<-formula
+            .self$data<-data
+            x<-model.matrix(formula,data)
+            y<-data[,all.vars(formula)[1]]
 
-                .self$formula <- formula
-                .self$data <-data
-                .self$coefficients$x <-x
-                .self$coefficients$y <-y
+            .self$formula <- formula
+            .self$data <-data
+            .self$coefficients$x <-x
+            .self$coefficients$y <-y
 
-                .self$coefficients$param <-deparse(substitute(data))
+            .self$coefficients$param <-deparse(substitute(data))
 
-                beta<- (solve(t(x)%*%x)%*%t(x))%*%y
-                .self$coefficients$beta <-beta
+            beta<- (solve(t(x)%*%x)%*%t(x))%*%y
+            .self$coefficients$beta <-beta
 
-                .self$coefficients$filted_v <- x%*%.self$coefficients$beta
-                .self$coefficients$resi_v <- y - .self$coefficients$filted_v
+            .self$coefficients$filted_v <- x%*%.self$coefficients$beta
+            .self$coefficients$resi_v <- y - .self$coefficients$filted_v
 
+            .self$coefficients$std_reduals <-sqrt(abs(.self$coefficients$resi_v))
 
-                .self$coefficients$std_reduals <-sqrt(abs(.self$coefficients$resi_v))
+            n <-length(.self$coefficients$y)
+            .self$coefficients$digree_of_free <- n - length(.self$coefficients$beta)
 
-                n <-length(.self$coefficients$y)
-                .self$coefficients$digree_of_free <- n - length(.self$coefficients$beta)
+            .self$coefficients$resi_var <- (t(.self$coefficients$resi_v)%*%.self$coefficients$resi_v)/.self$coefficients$digree_of_free
 
-                .self$coefficients$resi_var <- (t(.self$coefficients$resi_v)%*%.self$coefficients$resi_v)/.self$coefficients$digree_of_free
+            var_of_reg_coef <- (solve(t(x)%*%x))
 
-                var_of_reg_coef <- (solve(t(x)%*%x))
+            standard_error<-sqrt(diag(var_of_reg_coef)%*%.self$coefficients$resi_var)
 
-                standard_error<-sqrt(diag(var_of_reg_coef)%*%.self$coefficients$resi_var)
-
-                t_values <- beta/standard_error
-
-
-                pt_values<-2*pt(abs(t_values), .self$coefficients$digree_of_free, lower.tail = FALSE)
-
-                .self$coefficients$coefficients <- cbind(beta, standard_error, t_values, pt_values)
-                dimnames(.self$coefficients$coefficients) <- list(row.names(beta), c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
-              },
-
-              #'
-              #' @details Print function.
-              #' @description
-              #'This function print the coefficient of regretion.
-              #' @param reg object which return from linreg class
-              #' @return print the coefficient as lm function.
-
-              print = function(){
-                coefficient <-t(.self$coefficients$beta)
-                cat("Call:\n")
-                cat(paste0("linreg(formula = ",deparse(.self$formula),", data = ",.self$coefficients$param,")"))
-                cat("\nCoefficients:\n")
-                prmatrix(coefficient,rowlab=rep("",3))
-              },
-
-              #' @details Plot data
-              #' @description
-              #' This function plot two graph using ggplot2
-              #'
-              plot = function(){
-
-                plot_data <- data.frame(list(
-                  Residuals=.self$coefficients$resi_v,
-                  Fitted=.self$coefficients$filted_v
-                ))
-                plot_data1 <- data.frame(list(
-                  Fitted=.self$coefficients$filted_v,
-                  Standardizedresiduals=.self$coefficients$std_reduals
-                ))
-
-                liu_theme <- theme(
-                  plot.title =element_text(colour = "#6a7e91",size = 15,family="Calibri Regular"),
-                  plot.margin = margin(1, 1, 1, 1, "cm"),
-                  panel.grid.major = element_line(colour = "grey80"),
-                  panel.background = element_rect(
-                    fill = "white",
-                    colour = "black",
-                    linewidth = 1
-                  )
-                )
-                #logo <- readPNG("liu_logo.png")
-                p <- ggplot2::ggplot(data=plot_data)+ (mapping = aes(x = Fitted,y = Residuals ))
-                p <- p+ggplot2::labs(title = "Residuals vs Fitted" ,y="Residuals",x =paste0("Fitted \n lm(Petal.Length ~ Species)"))
-                p <-p+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
+            t_values <- beta/standard_error
 
 
-                p1 <- ggplot2::ggplot(data=plot_data1)+ (mapping = aes(x = Fitted,y = Standardizedresiduals ))+ggtitle("Scale−Location")
-                p1 <- p1+labs(y=expression(sqrt("Standardized residuals")),title ="Fitted \n lm(Petal.Length ~ Species)")
-                p1 <-p1+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
-                gridExtra::grid.arrange(p,p1,ncol=2)
+            pt_values<-2*pt(abs(t_values), .self$coefficients$digree_of_free, lower.tail = FALSE)
 
-              },
+            .self$coefficients$coefficients <- cbind(beta, standard_error, t_values, pt_values)
+            dimnames(.self$coefficients$coefficients) <- list(row.names(beta), c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
+          },
 
-              #' @details Print residuals values.
-              #' @description
-              #' Print the residuals values.
-              #'
-              resid = function(){
-                return(unlist(.self$coefficients$resi_v[,1]))
-              },
 
-              #' @details Print the  predicted values
-              #' @description
-              #' Print the  predicted values
-              #'
-              #'
-              pred = function(){
-                return(unlist(.self$coefficients$filted_v[,1]))
-              },
-              #' @details Coefficients
-              #' @description
-              #' Print the coefficients as a named vector.
-              #'
-              #'
-              coef = function(){
-                coefficient <-t(.self$coefficients$beta)
-                return(unname(t(.self$coefficients$beta)))
-              },
-              #' @details Summery
-              #' @description
-              #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ˆσ and the degrees
-              #'  of freedom in the model, same as printed of lm function.
-              #'
-              #'
-              summary  = function(){
-                coefficient <-t(.self$coefficients$beta)
-                cat(paste0("linreg(formula = ",deparse(.self$coefficients$formula),", data = ",.self$coefficients$param,")"))
-                cat("\nCoefficients:\n")
-                printCoefmat(.self$coefficients$coefficients, na.print = "NA")
-                cat("Residual standard error:",sqrt(.self$coefficients$resi_var), "on",.self$coefficients$digree_of_free,"degrees of freedom")
+          #' @details Print function.
+          #' @description
+          #'This function print the coefficient of regretion.
+          #' @param reg object which return from linreg class
+          #' @return print the coefficient as lm function.
 
-              }
+          print = function(){
+            coefficient <-t(.self$coefficients$beta)
+            cat("Call:\n")
+            cat(paste0("linreg(formula = ",deparse(.self$formula),", data = ",.self$coefficients$param,")"))
+            cat("\nCoefficients:\n")
+            prmatrix(coefficient,rowlab=rep("",3))
+          },
+
+          #' @details Plot data
+          #' @description
+          #' This function plot two graph using ggplot2
+          #'
+          plot = function(){
+
+            plot_data <- data.frame(list(
+              Residuals=.self$coefficients$resi_v,
+              Fitted=.self$coefficients$filted_v
+            ))
+            plot_data1 <- data.frame(list(
+              Fitted=.self$coefficients$filted_v,
+              Standardizedresiduals=.self$coefficients$std_reduals
+            ))
+            liu_theme <- theme(
+              plot.title =element_text(colour = "#6a7e91",size = 15),
+              plot.margin = margin(1, 1, 1, 1, "cm"),
+              panel.grid.major = element_line(colour = "grey80"),
+              panel.background = element_rect(
+                fill = "white",
+                colour = "black",
+                linewidth = 1
+              )
             )
+            #logo <- readPNG("liu_logo.png")
+            p <- ggplot2::ggplot(data=plot_data)+ (mapping = aes(x = Fitted,y = Residuals ))
+            p <- p+ggplot2::labs(title = "Residuals vs Fitted" ,y="Residuals",x =paste0("Fitted \n lm(Petal.Length ~ Species)"))
+            p <-p+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
+
+
+            p1 <- ggplot2::ggplot(data=plot_data1)+ (mapping = aes(x = Fitted,y = Standardizedresiduals ))+ggtitle("Scale-Location")
+            p1 <- p1+labs(y=expression(sqrt("Standardized residuals")),title ="Fitted \n lm(Petal.Length ~ Species)")
+            p1 <-p1+geom_point(shape=1, size=4)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme
+            gridExtra::grid.arrange(p,p1,ncol=2)
+
+          },
+
+          #' @details Print residuals values.
+          #' @description
+          #' Print the residuals values.
+          #'
+          resid = function(){
+            return(unlist(.self$coefficients$resi_v[,1]))
+          },
+
+          #' @details Print the  predicted values
+          #' @description
+          #' Print the  predicted values
+          #'
+          #'
+          pred = function(){
+            return(unlist(.self$coefficients$filted_v[,1]))
+          },
+          #' @details Coefficients
+          #' @description
+          #' Print the coefficients as a named vector.
+          #'
+          #'
+          coef = function(){
+            coefficient <-t(.self$coefficients$beta)
+            return(unname(t(.self$coefficients$beta)))
+          },
+          #' @details Summery
+          #' @description
+          #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ˆσ and the degrees
+          #'  of freedom in the model, same as printed of lm function.
+          #'
+          #'
+          summary  = function(){
+            coefficient <-t(.self$coefficients$beta)
+            cat(paste0("linreg(formula = ",deparse(.self$coefficients$formula),", data = ",.self$coefficients$param,")"))
+            cat("\nCoefficients:\n")
+            printCoefmat(.self$coefficients$coefficients, na.print = "NA")
+            cat("Residual standard error:",sqrt(.self$coefficients$resi_var), "on",.self$coefficients$digree_of_free,"degrees of freedom")
+
+          }
+        )
 )
-
-
-mod_object <-linreg$new(Petal.Length~Species, data = iris)
-mod_object$plot()
-mod_object$resid()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
