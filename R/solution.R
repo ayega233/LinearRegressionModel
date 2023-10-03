@@ -7,11 +7,16 @@
 library(ggplot2)
 library(stats)
 
-#' @details Reference class for Liner Regression.
+#' Reference class for Liner Regression.
 #' @field formula linear formula as symbolic model to filter data.
 #' @field data should be data frame
 #' @export linreg
-#' 
+#' @examples
+#'  data("iris")
+#'
+#'  linreg_mod <- linreg$new(formula = Petal.Length~Species, data=iris) 
+#'  linreg_mod$print()
+#'  
 #' 
 linreg <- setRefClass("linreg",
      fields = list(formula = "formula",data = "data.frame",coefficients="list"),
