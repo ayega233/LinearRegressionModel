@@ -6,16 +6,13 @@
 #' @import gridExtra
 
 
-library(ggplot2)
-library(stats)
-library(gridExtra)
 
 #' Reference class for Liner Regression.
 #' @field formula linear formula as symbolic model to filter data.
 #' @field data should be data frame
+#' @export
 #' @export linreg
 #' @name linreg
-#' @docType methods
 #' @examples
 #' data(iris)
 #' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
@@ -74,8 +71,6 @@ linreg <- setRefClass("linreg",
           #' @description
           #'This function print the coefficient of regretion.
           #' @param reg object which return from linreg class
-          #' @return print the coefficient as lm function.
-
           print = function(){
             coefficient <-t(.self$params$beta)
             cat("Call:\n")
@@ -147,7 +142,7 @@ linreg <- setRefClass("linreg",
           },
           #' @details Summery
           #' @description
-          #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ˆσ and the degrees
+          #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ^σ and the degrees
           #'  of freedom in the model, same as printed of lm function.
           #'
           #'
