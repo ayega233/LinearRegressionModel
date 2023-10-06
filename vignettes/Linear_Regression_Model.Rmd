@@ -2,7 +2,10 @@
 title: "Multiple Linear Regression Module"
 author: "Chandika Nishshanka & Ayesha Gamage"
 data: "'r.sys.date()'"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    fig_width: 10 
+    fig_height: 6
 vignette: >
   %\VignetteIndexEntry{Multiple Linear Regression Module}
   %\VignetteEngine{knitr::rmarkdown}
