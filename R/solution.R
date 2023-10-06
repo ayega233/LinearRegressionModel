@@ -1,18 +1,14 @@
 #'Linear regrestion model
-#' @name linregmodel
+#' @name linreg
 #' @import ggplot2
 #' @import stats
 #' @import methods
 #' @import gridExtra
 
 
-
-#' Reference class for Liner Regression.
 #' @field formula linear formula as symbolic model to filter data.
 #' @field data should be data frame
-#' @export
 #' @export linreg
-#' @name linreg
 #' @examples
 #' data(iris)
 #' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
@@ -22,8 +18,6 @@
 #' linreg_mod_object$pred()
 #' linreg_mod_object$coef()
 #' linreg_mod_object$summary()
-
-
 linreg <- setRefClass("linreg",
         fields = list(formula = "formula",data = "data.frame",params="list"),
         methods = list(
@@ -66,11 +60,9 @@ linreg <- setRefClass("linreg",
             dimnames(.self$params$coefficients) <- list(row.names(beta), c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
           },
 
-
-          #' @details Print function.
-          #' @description
-          #'This function print the coefficient of regretion.
-          #' @param reg object which return from linreg class
+   #' @details Print function.
+   #' @description
+   #'This function print the coefficient of regretion.
           print = function(){
             coefficient <-t(.self$params$beta)
             cat("Call:\n")
@@ -79,12 +71,11 @@ linreg <- setRefClass("linreg",
             prmatrix(coefficient,rowlab=rep("",3))
           },
 
-          #' @details Plot data
-          #' @description
-          #' This function plot two graph using ggplot2
-          #'
-          plot = function(){
 
+   #' @details Plot data
+   #' @description
+   #' This function plot two graph using ggplot2
+          plot = function(){
             plot_data <- data.frame(list(
               Residuals=.self$params$resi_v,
               Fitted=.self$params$filted_v
@@ -116,36 +107,35 @@ linreg <- setRefClass("linreg",
 
           },
 
-          #' @details Print residuals values.
-          #' @description
-          #' Print the residuals values.
-          #'
+   #' @details Print residuals values.
+   #' @description
+   #' Print the residuals values.
           resid = function(){
             return(unlist(.self$params$resi_v[,1]))
           },
 
-          #' @details Print the  predicted values
-          #' @description
-          #' Print the  predicted values
-          #'
-          #'
+
+
+   #' @details Print the  predicted values
+   #' @description
+   #' Print the  predicted values
           pred = function(){
             return(unlist(.self$params$filted_v[,1]))
           },
-          #' @details Coefficients
-          #' @description
-          #' Print the coefficients as a named vector.
-          #'
-          #'
+
+
+   #' @details Coefficients
+   #' @description
+   #' Print the coefficients as a named vector.
           coef = function(){
             return(unname(t(.self$params$beta)))
           },
-          #' @details Summery
-          #' @description
-          #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ^σ and the degrees
-          #'  of freedom in the model, same as printed of lm function.
-          #'
-          #'
+
+
+   #' @details Summery
+   #' @description
+   #' Print the coefficients with their standard error, t-value and p-value as well as the estimate of ^σ and the degrees
+   #'  of freedom in the model, same as printed of lm function.
           summary  = function(){
             coefficient <-t(.self$params$beta)
             cat(paste0("linreg(formula = ",deparse(.self$params$formula),", data = ",.self$params$param,")"))
