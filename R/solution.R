@@ -6,6 +6,9 @@
 #' @import gridExtra
 
 
+
+#' @description
+#' RC type class for Liner Regression model.
 #' @field formula linear formula as symbolic model to filter data.
 #' @field data should be data frame
 #' @export linreg

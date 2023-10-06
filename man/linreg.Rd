@@ -5,6 +5,8 @@
 \alias{linreg}
 \title{Linear regrestion model}
 \description{
+RC type class for Liner Regression model.
+
 This function print the coefficient of regretion.
 
 This function plot two graph using ggplot2
