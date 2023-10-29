@@ -117,3 +117,98 @@ linreg_mod_object$coef()
 ```{r}
 linreg_mod_object$summary()
 ```
+
+
+# Ridge regression
+
+Add a new function in linreg package that have already created previously call ridgereg(formula, data, lambda).As with the linreg() function it should take a formula object as well as a dataset and return a ridgereg
+object. The ridgereg() function should also have the argument lambda to specify λ.
+
+Ridge regression can be a good alternative when we have a lot of covariates (when p > n) or in the situation of multicollinearity.The hyperparameter that we will tune to find the best model is the λ parameters. Unlike the linear regression situation, different scalings of the covariates in X will affect the results. So normalize all covariates before you do the analysis.
+
+$$Xnorm = x − x̄/√(V (x) ) \tag{7}$$
+If you want to compare the results you can compare with lm.ridge() in the MASS package that is parametrized in the same way. But it uses SVD decomposition so there can be small differences in the results.
+
+##  Computations using least squares
+
+The simple way to calculate the different coefficients and values is to use ordinary linear algebra and
+calculate:
+
+Regressions coefficients:$$β ̂ridge=(X^T X+λI )^-1 X^T y \tag{8}$$
+
+The fitted values: $$y ̂=Xβ ̂ridge \tag{9}$$
+
+## Implementing methods
+
+As with the linreg() function you should implement some methods for your object.
+
+data(iris)
+mod_object <- lm(Petal.Length~Species, data = iris)
+print(mod_object)
+
+
+Call:
+lm(formula = Petal.Length ~ Species, data = iris)
+Coefficients:
+(Intercept) Speciesversicolor Speciesvirginica
+1.46 2.80 4.09
+
+predict() should return the predicted values yˆ, it should be able to predict for new dataset similar to the predict() function for the lm()
+
+package.coef() should return the ridge regression coefficients βˆridge
+
+
+## Handling large datasets with dplyr
+
+Create a function call visualize airport delays() without any arguments that creates a plot that visualizes the mean delay of flights for different airports by longitude and latitude using ggplot2. The datasets can be found in the nycflights13 package.
+
+## Create a vignettes for ridgereg(), dplyr and the caret package
+
+Create a vignette called ridgereg where you show how to do a simple prediction problem using your own ridgereg() function.
+Use the caret package and your ridgereg() function to create a predictive model for the BostonHousing data found in the mlbench package or (*) data from your own API. If you prefer you may use the tidymodels package instead of caret.The vignette should include the following:
+
+1. Divide the BostonHousing data (or your own API data) into a test and training dataset using the caret package.
+
+2. Fit a linear regression model and a fit a linear regression model with forward selection of covariates on the training dataset.
+
+i. You may do this by using any R package that is available on CRAN, but you may wish to
+use the caret package; see here
+(https://topepo.github.io/caret/train-models-by-tag.html#Linear Regression)
+ii. Remember that when using the forward selection algorithm on a dataset containing n
+covariates, the algorithm should be able to select amongst models trained on 0 (only
+intercept model), 1 (single covariate model), ..., n (model that uses all covariates, i.e. no
+removal of covariates) covariates.
+iii. If you do use caret::train for this task, make sure to check that the condition mentioned
+in hint (b) holds. You could check this, for example, by calling the summary function on
+output of the caret::train command; if this condition does not hold, check if tuning
+any parameter(s) of caret::train helps.
+iv. See here (https://topepo.github.io/caret/model-training-and-tuning.html#grids)
+for help on how to tune caret::train parameters.
+3. Evaluate the performance of this model on the training dataset.
+4. Fit a ridge regression model using your ridgereg() function to the training dataset for different
+values of λ. How to include custom models in caret is described here
+https://topepo.github.io/caret/using-your-own-model-in-train.html .
+5. Find the best hyperparameter value for λ using 10-fold cross-validation on the training set. More
+information how to use the caret package for training can be found here
+https://cran.r-project.org/web/packages/caret/vignettes/caret.html and here
+https://topepo.github.io/caret/model-training-and-tuning.html.
+6. Evaluate the performance of all three models on the test dataset and write some concluding comments.
+
+## (*) Predictive modeling of flight delays using ridgereg()
+
+Create a new vignette called flight delay where you try to predict the delay of each flight using your own
+ridgereg() function. If the data is too large, you can scale it down a bit, but the purpose is to try to
+do predictions using larger datasets.
+1. Read in the weather dataset and the flights dataset from the nycflights13 package and remove
+eventual variables you do not believe to have a predictive value.
+2. Add extra weather data from the weather dataset and create interaction effects you think could be
+of interest for the prediction.
+3. Use the caret package to divide the flight dataset into three sets: test, train and validation (with
+the proportions 5%, 80% and 15%.
+4. Train ridge regressions models for different values of λ and evaluate the root mean squared error (see
+here https://heuristically.wordpress.com/2013/07/12/calculate-rmse-and-mae-in-r-and-sas/)
+on the validation set. Try to find an optimal value for λ.
+5. When you found a good value for λ, use this to predict the test set and report the RMSE of your
+predicted model.
+
+
