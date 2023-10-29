@@ -1,10 +1,9 @@
 #'Linear regrestion model
 #' @name linreg
 #' @import ggplot2
-#' @import stats
-#' @import methods
-#' @import gridExtra
 
+#' @import methods
+#' @import ggpubr
 
 
 #' @description
@@ -105,7 +104,7 @@ linreg <- setRefClass("linreg",
             p1 <- ggplot2::ggplot(data=plot_data1)+ (mapping = aes(x = Fitted,y = Standardizedresiduals ))
             p1 <- p1+labs(y=expression(sqrt(abs("Standardized residuals"))),title ="Scale-Location")
             p1 <-p1+geom_point(shape=1, size=2)+stat_summary(fun = "median",color="red",geom = "smooth")+liu_theme+scale_y_continuous(breaks = c(0.5,1,1.5,2,2.5), limits = c(0.1,3))
-            gridExtra::grid.arrange(p,p1,ncol=2)
+            ggpubr::ggarrange(p,p1)
 
           },
 
@@ -148,4 +147,3 @@ linreg <- setRefClass("linreg",
           }
         )
 )
-
