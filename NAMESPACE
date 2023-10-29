@@ -3,6 +3,7 @@
 export(linreg)
 export(ridgereg)
 export(visualize_airport_delays)
+import(caret)
 import(ggplot2)
 import(ggpubr)
 import(magrittr)

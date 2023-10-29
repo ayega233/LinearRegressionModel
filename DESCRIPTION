@@ -44,4 +44,5 @@ Imports:
     ggpubr,
     dplyr,
     nycflights13,
-    magrittr
+    magrittr,
+    caret
