@@ -30,8 +30,7 @@ linreg <- setRefClass("linreg",
             x<-model.matrix(formula,data)
             y<-data[,all.vars(formula)[1]]
 
-            .self$formula <- formula
-            .self$data <-data
+
             .self$params$x <-x
             .self$params$y <-y
 
